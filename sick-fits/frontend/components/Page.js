@@ -1,8 +1,20 @@
 import React, { Component } from 'react';
 import styled, { ThemeProvider, injectGlobal } from 'styled-components';
+import Router from 'next/router';
+import NProgress from 'nprogress';
+
 import Header from '../components/Header'
 import Meta from '../components/Meta';
 
+Router.onRouteChangeStart = () => {
+    NProgress.start();
+}
+Router.onRouteChangeComplete = () => {
+    NProgress.done();
+}
+Router.onRouteChangeError = () => {
+    NProgress.done();
+}
 
 
 const theme = {
@@ -62,9 +74,9 @@ export default class Page extends Component {
             <ThemeProvider theme={theme}>
                 <StyledPage>
                     <Meta />
-                    <Header/>
+                    <Header />
                     <Inner> {this.props.children} </Inner>
-                </StyledPage> 
+                </StyledPage>
             </ThemeProvider>
         )
     }
