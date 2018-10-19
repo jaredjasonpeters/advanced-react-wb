@@ -3,7 +3,6 @@
 const mutations = {
   async createItem(parent, args, ctx, info) {
     //TODO: Check if they are logged in
-
     const item = await ctx.db.createItem({ ...args }, info)
     return item;
   }
