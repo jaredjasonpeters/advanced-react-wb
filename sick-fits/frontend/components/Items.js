@@ -48,3 +48,5 @@ export default class Items extends Component {
     )
   }
 }
+
+export { All_ITEMS_QUERY }
