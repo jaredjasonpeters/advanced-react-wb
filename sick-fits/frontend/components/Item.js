@@ -12,7 +12,9 @@ class Item extends Component {
     item: PropTypes.shape({
       title: PropTypes.string.isRequired,
       price: PropTypes.number.isRequired,
-      description: PropTypes.string.isRequired
+      description: PropTypes.string.isRequired,
+      image: PropTypes.string,
+      largeImage: PropTypes.string
     }),
   };
 

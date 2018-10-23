@@ -6,7 +6,10 @@ import Form from './styles/Form';
 import formatMoney from '../lib/formatMoney';
 import Error from './ErrorMessage';
 
-
+function imageUploadComplete ({ image, largeImage }) {
+  if (image && largeImage !== '')
+  return true
+}
 
 const CREATE_ITEM_MUTATION = gql`
   mutation CREATE_ITEM_MUTATION (
@@ -30,11 +33,11 @@ const CREATE_ITEM_MUTATION = gql`
 
 class CreateItem extends Component {
   state = {
-    title: 'Sell',
-    description: 'I love those things',
-    image: 'dog.jpg',
-    largeImage: 'large-dog.jpg',
-    price: 1500,
+    title: '',
+    description: '',
+    image: '',
+    largeImage: '',
+    price: 0,
   };
 
   handleChange = (e) => {
@@ -44,7 +47,27 @@ class CreateItem extends Component {
     this.setState({
       [name]: val
     })
-  }
+  };
+
+  uploadFile = async (e) => {
+    const files = e.target.files
+    console.log('uploading file...')
+    const data = new FormData();
+    data.append('file', files[0])
+    data.append('upload_preset', 'sick-fits');
+
+    const res = await fetch('https://api.cloudinary.com/v1_1/dlf-pickseed/image/upload', {
+      method: 'POST',
+      body: data
+    });
+    const file = await res.json();
+    console.log(file)
+    this.setState({
+      image: file.secure_url,
+      largeImage: file.eager[0].secure_url
+    });
+  };
+
 
   render() {
     return (
@@ -54,19 +77,35 @@ class CreateItem extends Component {
             <Form
               onSubmit={async (e) => {
                 e.preventDefault();
-                const res = await createItem();
-                console.log(res);
-                Router.push({
-                  pathname: '/item',
-                  query: { id: res.data.createItem.id }
-                });
+                if (imageUploadComplete(this.state)) {
+                  const res = await createItem();
+                  console.log(res);
+                  Router.push({
+                    pathname: '/item',
+                    query: { id: res.data.createItem.id }
+                  });
+                }
               }}
             >
               <Error error={error} />
               <fieldset disabled={loading} aria-busy={loading}>
+                
+              <label htmlFor="file">
+                  Title
+                  <input
+                    type="file"
+                    id="file"
+                    name="file"
+                    placeholder="Upload an image"
+                    onChange={this.uploadFile}
+                    required />
+                    {this.state.image && <img src=
+                    {this.state.image} alt="Upload Preview" />}
+                </label>
+
                 <label htmlFor="title">
                   Title
-            <input
+                  <input
                     type="text"
                     id="title"
                     name="title"
