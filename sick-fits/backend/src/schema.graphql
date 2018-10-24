@@ -23,7 +23,7 @@ type Mutation {
 }
 
 type Query {
-  items: [Item]!
-  item(id: ID!): Item
+  items(where: ItemWhereInput, orderBy: ItemOrderByInput, skip: Int, first: Int): [Item]!
+  item(where: ItemWhereUniqueInput!): Item
   itemsConnection(where: ItemWhereInput): ItemConnection!
 }
