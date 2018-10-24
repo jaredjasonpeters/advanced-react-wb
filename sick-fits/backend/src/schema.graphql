@@ -1,3 +1,5 @@
+# import * from "./generated/prisma.graphql"
+scalar DateTime
 
 type Item {
   id: ID!
@@ -23,4 +25,5 @@ type Mutation {
 type Query {
   items: [Item]!
   item(id: ID!): Item
+  itemsConnection(where: ItemWhereInput): ItemConnection!
 }
