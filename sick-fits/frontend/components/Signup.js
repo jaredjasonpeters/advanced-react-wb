@@ -25,41 +25,57 @@ export default class Signup extends Component{
 		this.setState({ [e.target.name]: e.target.value })
 	}
 	render(){
-		return(
-			<Form>
-				<fieldset>
-					<h2>Sign Up for An Account</h2>
-					<label htmlFor="email">
-						<input 
-						type="email" 
-						name="email" 
-						placeholder="email" 
-						value={this.state.email} 
-						onChange={this.saveToState}
-						/>					
-					</label>
-					<label htmlFor="name">
-						<input 
-						type="text" 
-						name="name" 
-						placeholder="name" 
-						value={this.state.name} 
-						onChange={this.saveToState}
-						/>					
-					</label>
-					<label htmlFor="password">
-						<input 
-						type="password" 
-						name="password" 
-						placeholder="password" 
-						value={this.state.password} 
-						onChange={this.saveToState}
-						/>					
-					</label>
+		return (
+			<Mutation 
+			mutation={SIGNUP_MUTATION}
+			variables={this.state}>
+				{(signup, { data, loading, error }) => {
+					return (
+						<Form method="post" onSubmit={async (e) => {
+							e.preventDefault();
+							await signup();
+							this.setState({
+								name: '',
+								email: '',
+								password: '',
+							})
+						}}>
+							<fieldset disabled={loading} aria-busy={loading}>
+								<h2>Sign Up for An Account</h2>
+								<Error error={error}/>
+								<label htmlFor="email">
+									<input 
+									type="email" 
+									name="email" 
+									placeholder="email" 
+									value={this.state.email} 
+									onChange={this.saveToState}
+									/>					
+								</label>
+								<label htmlFor="name">
+									<input 
+									type="text" 
+									name="name" 
+									placeholder="name" 
+									value={this.state.name} 
+									onChange={this.saveToState}
+									/>					
+								</label>
+								<label htmlFor="password">
+									<input 
+									type="password" 
+									name="password" 
+									placeholder="password" 
+									value={this.state.password} 
+									onChange={this.saveToState}
+									/>					
+								</label>
 
-					<button type="submit">Sign Up</button>
-				</fieldset>
-			</Form>
+								<button type="submit">Sign Up</button>
+							</fieldset>
+						</Form>
+					)}}
+			</Mutation>
 		);
 	}
 }
