@@ -90,9 +90,9 @@ const mutations = {
       where: { email: args.email },
       data: { resetToken, resetTokenExpiry },
     });
-    console.log(res)
     return { message: 'Thanks!' };
     //3. Email them that reset token
+    
    },
    async resetPassword(parent, args, ctx, info) {
      // 1. check if the passwords match
