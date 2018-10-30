@@ -8,6 +8,7 @@ type Item {
   image: String
   largeImage: String
   price: Int!
+  user: User
 }
 
 type SuccessMessage {

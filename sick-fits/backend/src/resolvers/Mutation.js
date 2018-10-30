@@ -7,8 +7,23 @@ const { transport, makeANiceEmail } = require('../mail');
 const mutations = {
   
   async createItem(parent, args, ctx, info) {
-    //TODO: Check if they are logged in
-    const item = await ctx.db.mutation.createItem({ data: {...args}}, info)
+    if(!ctx.request.userId) {
+        throw new Error('You must be logged in to do that');
+    }
+
+    const item = await ctx.db.mutation.createItem(
+      { 
+        data: {
+          //This is how we create a relationship between item and user
+          user: {
+            connect: {
+              id: ctx.request.userId,
+            }
+          },
+          ...args,
+        },
+      }, info)
+
     return item;
   },
   async updateItem(parent, args, ctx, info) {
@@ -28,9 +43,9 @@ const mutations = {
 
 
   async deleteItem( parent, args, ctx, info ) {
-    const where = { id: args.id };
+    const where = { where: {id: args.id } };
     // find the item
-    const item = await ctx.db.mutation.item(where, `{id title }`);
+    const item = await ctx.db.query.item(where, `{id title }`);
     // find if they own or have permissions
 
     // delete it!
