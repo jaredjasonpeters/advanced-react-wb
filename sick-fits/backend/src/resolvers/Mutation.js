@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { randomBytes } = require('crypto');
 const { promisify } = require('util');
+const { transport, makeANiceEmail } = require('../mail');
 
 const mutations = {
   
@@ -23,6 +24,9 @@ const mutations = {
     )
     return itemUpdate
   },
+
+
+
   async deleteItem( parent, args, ctx, info ) {
     const where = { id: args.id };
     // find the item
@@ -32,6 +36,7 @@ const mutations = {
     // delete it!
     return ctx.db.mutation.deleteItem(where, info);
   },
+
   async signup(parent, args, ctx, info) {
     args.email = args.email.toLowerCase();
     //hash their password
@@ -53,8 +58,11 @@ const mutations = {
     });
     //we return user to the Browser
     return user;
-
   },
+
+
+
+
   async signin(parent, {email, password}, ctx, info) {
     //1. check if there is a user
     const user = await ctx.db.query.user({ where : {email}})
@@ -73,10 +81,18 @@ const mutations = {
     //5. return the user
     return user
    },
+
+
+
+
    signout(parent, args, ctx, info){
     ctx.response.clearCookie('token');
     return { message: 'Goodbye' }
    },
+
+
+
+
    async requestReset(parent, args, ctx, info){
     //1. Check if this is a real user
     const user = await ctx.db.query.user({where: { email: args.email }})
@@ -90,10 +106,22 @@ const mutations = {
       where: { email: args.email },
       data: { resetToken, resetTokenExpiry },
     });
-    return { message: 'Thanks!' };
     //3. Email them that reset token
-    
+    const mailRes = await transport.sendMail({
+      from: 'jared@jared.com',
+      to: user.email,
+      subject: 'Your Password Reset Token',
+      html: makeANiceEmail(`Your Password Reset Token is Here 
+      \n\n 
+      <a href="${process.env.FRONTEND_URL}/reset?resetToken=${resetToken}">Click here to Reset!</a>`),
+    });
+    //4. Return the message
+    return { message: 'Thanks!' };
    },
+
+
+   
+
    async resetPassword(parent, args, ctx, info) {
      // 1. check if the passwords match
      if(args.password !== args.confirmPassword) {
