@@ -63,7 +63,7 @@ injectGlobal`
     }
     a {
         text-decoration: none;
-        color: ${theme.black};
+        color: ${props => props.theme.black};
     }
 `;
 

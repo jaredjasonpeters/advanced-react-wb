@@ -9,7 +9,7 @@ import { CREATE_ITEM_MUTATION } from './CreateItem';
 
 const SINGLE_ITEM_QUERY = gql`
   query SINGLE_ITEM_QUERY($id: ID!) {
-    item(id: $id) {
+    item(where: {id: $id}) {
       id
       title
       description

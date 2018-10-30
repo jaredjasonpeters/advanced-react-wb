@@ -1,12 +1,13 @@
 import Link from 'next/link';
 import NavStyles from './styles/NavStyles';
 import User from './User';
+import Signout from './Signout';
 
-const Nav = () => (
+const Nav = (props) => (
     <User>
         {({data: { me }}) => (
             <NavStyles>
-            
+                {me && <p>{me.name}</p>}
                 <Link href="/items">
                     <a>Shop</a>
                 </Link>
@@ -28,6 +29,7 @@ const Nav = () => (
                         <Link href="/me">
                             <a>Account</a>
                         </Link>
+                        <Signout />
                     </>
                 )
                 }

@@ -54,7 +54,7 @@ const StyledHeader = styled.header`
 	}
 `;
 
-const Header = () => (
+const Header = (props) => (
     <StyledHeader>
         <div className="bar">
             <Logo>
