@@ -5,16 +5,15 @@ import Form from './styles/Form';
 import Error from './ErrorMessage';
 import { CURRENT_USER_QUERY } from './User';
 
-const SIGNUP_MUTATION = gql`
-	mutation SIGNUP_MUTATION($email: String!, $name: String!, $password: String!) {
-		signup(email: $email, name: $name, password: $password) {
+const SIGNIN_MUTATION = gql`
+	mutation SIGNUP_MUTATION($email: String!, $password: String!) {
+		signin(email: $email, password: $password) {
 			id
 			email
 			name
 		}
 	}
 `
-
 
 export default class Signup extends Component{
 	state = {
@@ -28,14 +27,15 @@ export default class Signup extends Component{
 	render(){
 		return (
 			<Mutation 
-			mutation={SIGNUP_MUTATION}
+			mutation={SIGNIN_MUTATION}
 			variables={this.state}
-			refetchQueries={[{ query: CURRENT_USER_QUERY }]}>
-				{(signup, { data, loading, error }) => {
+            refetchQueries={[{ query: CURRENT_USER_QUERY }]}
+            >
+				{(signin, { data, loading, error }) => {
 					return (
 						<Form method="post" onSubmit={async (e) => {
 							e.preventDefault();
-							await signup();
+							await signin();
 							this.setState({
 								name: '',
 								email: '',
@@ -43,7 +43,7 @@ export default class Signup extends Component{
 							})
 						}}>
 							<fieldset disabled={loading} aria-busy={loading}>
-								<h2>Sign Up for An Account</h2>
+								<h2>Sign in with an existing account!</h2>
 								<Error error={error}/>
 								<label htmlFor="email">
 									<input 
@@ -51,15 +51,6 @@ export default class Signup extends Component{
 									name="email" 
 									placeholder="email" 
 									value={this.state.email} 
-									onChange={this.saveToState}
-									/>					
-								</label>
-								<label htmlFor="name">
-									<input 
-									type="text" 
-									name="name" 
-									placeholder="name" 
-									value={this.state.name} 
 									onChange={this.saveToState}
 									/>					
 								</label>
@@ -73,7 +64,7 @@ export default class Signup extends Component{
 									/>					
 								</label>
 
-								<button type="submit">Sign Up</button>
+								<button type="submit">Sign In</button>
 							</fieldset>
 						</Form>
 					)}}
