@@ -5,9 +5,9 @@ import User from './User';
 const Nav = () => (
     <NavStyles>
         <User>
-            {({data: { me: {id} }}) => {
-                console.log(id);
-                return <p>User</p>;
+            {({data: { me }}) => {
+                if (me) return <p> Welcome {me.name.toUpperCase()}!</p>;
+                else return null
             }}
         </User>
         <Link href="/items">
