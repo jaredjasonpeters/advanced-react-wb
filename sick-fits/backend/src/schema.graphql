@@ -10,6 +10,10 @@ type Item {
   price: Int!
 }
 
+type SuccessMessage {
+  message: String
+}
+
 type Mutation {
  createItem (
    title: String, 
@@ -21,6 +25,8 @@ type Mutation {
   updateItem(id: ID!, title: String, description: String, price: Int, image: String, largeImage: String): Item!
   deleteItem(id: ID!): Item
   signup(email: String!, password: String!, name: String!): User!
+  signin(email: String!, password: String!): User!
+  signout: SuccessMessage
 }
 
 type Query {
