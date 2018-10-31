@@ -6,7 +6,7 @@ import Error from './ErrorMessage';
 import { CURRENT_USER_QUERY } from './User';
 
 const SIGNIN_MUTATION = gql`
-	mutation SIGNUP_MUTATION($email: String!, $password: String!) {
+	mutation SIGNIN_MUTATION($email: String!, $password: String!) {
 		signin(email: $email, password: $password) {
 			id
 			email
@@ -15,7 +15,7 @@ const SIGNIN_MUTATION = gql`
 	}
 `
 
-export default class Signup extends Component{
+export default class Signin extends Component{
 	state = {
 		name: '',
 		password: '',

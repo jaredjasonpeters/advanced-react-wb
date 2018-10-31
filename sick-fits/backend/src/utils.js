@@ -14,4 +14,12 @@ function hasPermission(user, permissionsNeeded) {
   }
 }
 
+function setCookieWithToken (ctx, token) {
+  ctx.response.cookie('token', token, {
+    httpOnly: true, 
+    maxAge: 1000 * 60 * 60 * 24 * 365,
+  })
+};
+
 exports.hasPermission = hasPermission;
+exports.setCookieWithToken = setCookieWithToken;

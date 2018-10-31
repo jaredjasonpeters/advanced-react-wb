@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const { randomBytes } = require('crypto');
 const { promisify } = require('util');
 const { transport, makeANiceEmail } = require('../mail');
+const { setCookieWithToken } = require('../utils')
 
 const mutations = {
   
@@ -67,10 +68,7 @@ const mutations = {
     // create the JWT for them
     const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET);
     // we set the jwt as a cookie on the response
-    ctx.response.cookie('token', token, {
-      httpOnly: true,
-      maxAge: 1000 * 60 * 60 * 24 * 365, //1 year cookie
-    });
+    setCookieWithToken(ctx, token);
     //we return user to the Browser
     return user;
   },
@@ -177,9 +175,3 @@ const mutations = {
 
 module.exports = mutations;
 
-function setCookieWithToken (ctx, token) {
-  ctx.response.cookie('token', token, {
-    httpOnly: true, 
-    maxAge: 1000 * 60 * 60 * 24 * 365,
-  })
-};
