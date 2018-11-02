@@ -1,13 +1,13 @@
-import React, { Component } from 'react';
-import { Query } from 'react-apollo';
-import gql from 'graphql-tag';
-import styled from 'styled-components';
-import Item from '../components/Item';
-import Pagination from './Pagination';
-import { perPage } from '../config'
+import React, { Component } from "react";
+import { Query } from "react-apollo";
+import gql from "graphql-tag";
+import styled from "styled-components";
+import Item from "../components/Item";
+import Pagination from "./Pagination";
+import { perPage } from "../config";
 
 const ALL_ITEMS_QUERY = gql`
-  query All_ITEMS_QUERY ($skip: Int = 0, $first: Int = ${perPage}) {
+  query ALL_ITEMS_QUERY ($skip: Int = 0, $first: Int = ${perPage}) {
     items (first: $first, skip: $skip, orderBy: price_DESC) {
       id
       title
@@ -25,12 +25,11 @@ const ItemsList = styled.div`
   grid-gap: 60px;
   max-width: ${props => props.theme.maxWidth};
   margin 0 auto;
-`
+`;
 
 const Center = styled.div`
   text-align: center;
-
-`
+`;
 class Items extends Component {
   render() {
     return (
@@ -40,22 +39,25 @@ class Items extends Component {
           query={ALL_ITEMS_QUERY}
           variables={{
             skip: this.props.page * perPage - perPage
-          }}>
+          }}
+        >
           {({ data, loading, error }) => {
-            if (loading) return <p>Loading...</p>
-            if (error) return <p>Error: {error.message}</p>
-            return <ItemsList>
-              {data.items.map(item => {
-                return <Item key={item.id} item={item} />
-              })}
-            </ItemsList>
+            if (loading) return <p>Loading...</p>;
+            if (error) return <p>Error: {error.message}</p>;
+            return (
+              <ItemsList>
+                {data.items.map(item => {
+                  return <Item key={item.id} item={item} />;
+                })}
+              </ItemsList>
+            );
           }}
         </Query>
         <Pagination page={this.props.page} />
       </Center>
-    )
+    );
   }
 }
 
-export default Items
-export { ALL_ITEMS_QUERY }
+export default Items;
+export { ALL_ITEMS_QUERY };
