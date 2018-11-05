@@ -1,12 +1,12 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import Title from './styles/Title';
-import Link from 'next/link'
-import ItemStyles from './styles/ItemStyles';
-import PriceTag from './styles/PriceTag';
-import formatMoney from '../lib/formatMoney';
-import DeleteItem from './DeleteItem'
-
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import Title from "./styles/Title";
+import Link from "next/link";
+import ItemStyles from "./styles/ItemStyles";
+import PriceTag from "./styles/PriceTag";
+import formatMoney from "../lib/formatMoney";
+import DeleteItem from "./DeleteItem";
+import AddToCart from "./AddToCart";
 
 class Item extends Component {
   static propTypes = {
@@ -16,7 +16,7 @@ class Item extends Component {
       description: PropTypes.string.isRequired,
       image: PropTypes.string,
       largeImage: PropTypes.string
-    }),
+    })
   };
 
   render() {
@@ -25,26 +25,28 @@ class Item extends Component {
       <ItemStyles>
         {item.image && <img src={item.image} alt={item.title} />}
         <Title>
-          <Link href={{
-            pathname: '/item',
-            query: { id: item.id }
-          }}>
+          <Link
+            href={{
+              pathname: "/item",
+              query: { id: item.id }
+            }}
+          >
             <a>{item.title}</a>
           </Link>
         </Title>
-        <PriceTag>
-          {formatMoney(item.price)}
-        </PriceTag>
+        <PriceTag>{formatMoney(item.price)}</PriceTag>
         <p>{item.description}</p>
 
         <div className="buttonList">
-          <Link href={{
-            pathname: 'update',
-            query: { id: item.id }
-          }}>
+          <Link
+            href={{
+              pathname: "update",
+              query: { id: item.id }
+            }}
+          >
             <a>Edit</a>
           </Link>
-          <button> Add to Cart </button>
+          <AddToCart id={item.id} />
           <DeleteItem id={item.id}>Delete This Item</DeleteItem>
         </div>
       </ItemStyles>
