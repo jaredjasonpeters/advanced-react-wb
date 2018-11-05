@@ -16,28 +16,45 @@ type SuccessMessage {
 }
 
 type Mutation {
- createItem (
-   title: String, 
-   description: String,
-   price: Int,
-   image: String,
-   largeImage: String,
-  ) : Item!
-  updateItem(id: ID!, title: String, description: String, price: Int, image: String, largeImage: String): Item!
+  createItem(
+    title: String
+    description: String
+    price: Int
+    image: String
+    largeImage: String
+  ): Item!
+  updateItem(
+    id: ID!
+    title: String
+    description: String
+    price: Int
+    image: String
+    largeImage: String
+  ): Item!
   deleteItem(id: ID!): Item
   signup(email: String!, password: String!, name: String!): User!
   signin(email: String!, password: String!): User!
   signout: SuccessMessage
   requestReset(email: String!): SuccessMessage
-  resetPassword(resetToken: String!, password: String!, confirmPassword: String!): User!
-  updatePermissions(permissions: [Permission], userId: ID! ):User
+  resetPassword(
+    resetToken: String!
+    password: String!
+    confirmPassword: String!
+  ): User!
+  updatePermissions(permissions: [Permission], userId: ID!): User
+  addToCart(id: ID!): CartItem
 }
 
 type Query {
-  items(where: ItemWhereInput, orderBy: ItemOrderByInput, skip: Int, first: Int): [Item]!
+  items(
+    where: ItemWhereInput
+    orderBy: ItemOrderByInput
+    skip: Int
+    first: Int
+  ): [Item]!
   item(where: ItemWhereUniqueInput!): Item
   itemsConnection(where: ItemWhereInput): ItemConnection!
-  users(where: ItemWhereInput):[User]!
+  users(where: ItemWhereInput): [User]!
   me: User
 }
 
@@ -46,4 +63,5 @@ type User {
   name: String!
   email: String!
   permissions: [Permission!]!
+  cart: [CartItem!]!
 }
