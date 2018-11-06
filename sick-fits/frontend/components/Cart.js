@@ -1,6 +1,7 @@
 import React from "react";
 import { Query, Mutation } from "react-apollo";
 import gql from "graphql-tag";
+import { adopt } from "react-adopt";
 import { consolidateStreamedStyles } from "styled-components";
 import SickButton from "./styles/SickButton";
 import CartStyle from "./styles/CartStyles";
@@ -21,14 +22,20 @@ const TOGGLE_CART_MUTATION = gql`
   }
 `;
 
+const Composed = adopt({
+  user: ({ render }) => <User>{render}</User>,
+  toggleCart: ({ render }) => (
+    <Mutation mutation={TOGGLE_CART_MUTATION}>{render}</Mutation>
+  ),
+  localState: ({ render }) => <Query query={LOCAL_STATE_QUERY}>{render}</Query>
+});
+
 const Cart = () => {
   return (
-    <User>
-      {({
-        data: {
-          me: { name, cart }
-        }
-      }) => {
+    <Composed>
+      {({ user, toggleCart, localState }) => {
+        const me = user.data.me;
+        const cart = user.data.me.cart;
         if (!cart) return null;
 
         const itemCount = cart.length;
@@ -38,48 +45,34 @@ const Cart = () => {
         }, 0);
 
         return (
-          <Mutation mutation={TOGGLE_CART_MUTATION}>
-            {toggleCart => {
-              return (
-                <Query query={LOCAL_STATE_QUERY}>
-                  {({ data, loading, error }) => {
-                    return (
-                      <CartStyle open={data.cartOpen}>
-                        <header>
-                          <CloseButton title="close" onClick={toggleCart}>
-                            &times;
-                          </CloseButton>
-                          <Supreme>
-                            {name}
-                            's Cart
-                          </Supreme>
-                          <p>
-                            {" "}
-                            You Have {itemCount} Item
-                            {itemCount === 1 ? "" : "s"} in your cart.
-                          </p>
-                        </header>
-                        <ul>
-                          {cart.map(cartItem => {
-                            return (
-                              <CartItem key={cartItem.id} cartItem={cartItem} />
-                            );
-                          })}
-                        </ul>
-                        <footer>
-                          <p>{formatMoney(cartTotal)}</p>
-                          <SickButton> Checkout </SickButton>
-                        </footer>
-                      </CartStyle>
-                    );
-                  }}
-                </Query>
-              );
-            }}
-          </Mutation>
+          <CartStyle open={localState.data.cartOpen}>
+            <header>
+              <CloseButton title="close" onClick={toggleCart}>
+                &times;
+              </CloseButton>
+              <Supreme>
+                {me.name}
+                's Cart
+              </Supreme>
+              <p>
+                {" "}
+                You Have {itemCount} Item
+                {itemCount === 1 ? "" : "s"} in your cart.
+              </p>
+            </header>
+            <ul>
+              {cart.map(cartItem => {
+                return <CartItem key={cartItem.id} cartItem={cartItem} />;
+              })}
+            </ul>
+            <footer>
+              <p>{formatMoney(cartTotal)}</p>
+              <SickButton> Checkout </SickButton>
+            </footer>
+          </CartStyle>
         );
       }}
-    </User>
+    </Composed>
   );
 };
 
