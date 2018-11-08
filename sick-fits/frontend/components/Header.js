@@ -4,7 +4,7 @@ import Router from "next/router";
 import NProgress from "nprogress";
 import Nav from "./Nav";
 import Cart from "./Cart";
-import Search from './Search'
+import Search from "./Search";
 
 Router.onRouteChangeStart = () => {
   console.log("onRouteChangeStart Triggered");
@@ -66,7 +66,7 @@ const Header = props => (
       <Nav />
     </div>
     <div className="sub-bar">
-      <Search />
+      <Search theme={props.theme} />
     </div>
     <Cart />
   </StyledHeader>
