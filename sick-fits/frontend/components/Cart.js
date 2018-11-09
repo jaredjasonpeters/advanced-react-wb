@@ -10,6 +10,7 @@ import CloseButton from "./styles/CloseButton";
 import User from "./User";
 import formatMoney from "../lib/formatMoney";
 import CartItem from "../components/CartItem";
+import TakeMyMoney from "../components/TakeMyMoney";
 
 const LOCAL_STATE_QUERY = gql`
   query {
@@ -67,7 +68,9 @@ const Cart = () => {
             </ul>
             <footer>
               <p>{formatMoney(cartTotal)}</p>
-              <SickButton> Checkout </SickButton>
+              <TakeMyMoney>
+                <SickButton> Checkout </SickButton>
+              </TakeMyMoney>
             </footer>
           </CartStyle>
         );
