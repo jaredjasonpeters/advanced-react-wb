@@ -42,27 +42,27 @@ const Cart = () => {
   return (
     <Composed>
       {({ user, toggleCart, localState }) => {
-        if (!user.data.me) return null
-        if (!user.data.me.cart) return null
-        const { name, cart } = user.data.me
+        if (!user.data.me) return null;
+        if (!user.data.me.cart) return null;
+        const { name, cart } = user.data.me;
         const itemCount = cart.reduce((total, cartItem) => {
-          return total += cartItem.quantity
-        }, 0)
+          return (total += cartItem.quantity);
+        }, 0);
         return (
           <CartStyle open={localState.data.cartOpen}>
             <header>
               <CloseButton title="close" onClick={toggleCart}>
                 &times;
-                </CloseButton>
+              </CloseButton>
               <Supreme>
                 {name}
                 's Cart
-                </Supreme>
+              </Supreme>
               <p>
                 {" "}
                 You Have {itemCount} Item
-                  {itemCount === 1 ? "" : "s"} in your cart.
-                </p>
+                {itemCount === 1 ? "" : "s"} in your cart.
+              </p>
             </header>
             <ul>
               {cart.map(cartItem => {
@@ -71,9 +71,11 @@ const Cart = () => {
             </ul>
             <footer>
               <p>{formatMoney(cartTotal(cart))}</p>
-              <TakeMyMoney>
-                <SickButton> Checkout </SickButton>
-              </TakeMyMoney>
+              {cart.length ? (
+                <TakeMyMoney>
+                  <SickButton> Checkout </SickButton>
+                </TakeMyMoney>
+              ) : null}
             </footer>
           </CartStyle>
         );
