@@ -31,35 +31,38 @@ const Composed = adopt({
   localState: ({ render }) => <Query query={LOCAL_STATE_QUERY}>{render}</Query>
 });
 
+function cartTotal(cart) {
+  return cart.reduce((p, v, i, a) => {
+    if (!v.item) return p;
+    return (p += v.quantity * v.item.price);
+  }, 0);
+}
+
 const Cart = () => {
   return (
     <Composed>
       {({ user, toggleCart, localState }) => {
-        const me = user.data.me;
-        const cart = user.data.me.cart;
-        if (!cart) return null;
-
-        const itemCount = cart.length;
-        const cartTotal = cart.reduce((p, v, i, a) => {
-          if (!v.item) return p;
-          return (p += v.quantity * v.item.price);
-        }, 0);
-
+        if (!user.data.me) return null
+        if (!user.data.me.cart) return null
+        const { name, cart } = user.data.me
+        const itemCount = cart.reduce((total, cartItem) => {
+          return total += cartItem.quantity
+        }, 0)
         return (
           <CartStyle open={localState.data.cartOpen}>
             <header>
               <CloseButton title="close" onClick={toggleCart}>
                 &times;
-              </CloseButton>
+                </CloseButton>
               <Supreme>
-                {me.name}
+                {name}
                 's Cart
-              </Supreme>
+                </Supreme>
               <p>
                 {" "}
                 You Have {itemCount} Item
-                {itemCount === 1 ? "" : "s"} in your cart.
-              </p>
+                  {itemCount === 1 ? "" : "s"} in your cart.
+                </p>
             </header>
             <ul>
               {cart.map(cartItem => {
@@ -67,7 +70,7 @@ const Cart = () => {
               })}
             </ul>
             <footer>
-              <p>{formatMoney(cartTotal)}</p>
+              <p>{formatMoney(cartTotal(cart))}</p>
               <TakeMyMoney>
                 <SickButton> Checkout </SickButton>
               </TakeMyMoney>
