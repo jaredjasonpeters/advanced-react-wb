@@ -9,6 +9,12 @@ import calcTotalPrice from "../lib/calcTotalPrice";
 import Error from "./ErrorMessage";
 import User, { CURRENT_USER_QUERY } from "./User";
 
+const TOGGLE_CART_MUTATION = gql`
+  mutation {
+    toggleCart @client
+  }
+`;
+
 const CREATE_ORDER_MUTATION = gql`
   mutation createOrder($token: String!) {
     createOrder(token: $token) {
@@ -30,14 +36,22 @@ function totalItems(cart) {
 }
 
 class TakeMyMoney extends Component {
-  onToken = (res, createOrder) => {
-    console.log(res);
-    createOrder({
+  onToken = async (res, createOrder, client) => {
+    NProgress.start();
+
+    const order = await createOrder({
       variables: {
         token: res.id
       }
     }).catch(err => {
       alert(err.message);
+    });
+    client.mutate({
+      mutation: TOGGLE_CART_MUTATION
+    });
+    Router.push({
+      pathname: "/order",
+      query: { id: order.data.createOrder.id }
     });
   };
 
@@ -50,7 +64,7 @@ class TakeMyMoney extends Component {
               mutation={CREATE_ORDER_MUTATION}
               refetchQueries={[{ query: CURRENT_USER_QUERY }]}
             >
-              {createOrder => {
+              {(createOrder, { data, loading, error, client }) => {
                 return (
                   <StripeCheckout
                     amount={calcTotalPrice(me.cart)}
@@ -62,7 +76,7 @@ class TakeMyMoney extends Component {
                     stripeKey="pk_test_qjSwtsTNWqgxXlrrHnp8Vhbe"
                     currency="USD"
                     email={me.email}
-                    token={res => this.onToken(res, createOrder)}
+                    token={res => this.onToken(res, createOrder, client)}
                   >
                     {this.props.children}
                   </StripeCheckout>
