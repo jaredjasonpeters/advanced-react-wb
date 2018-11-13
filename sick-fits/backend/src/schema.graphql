@@ -57,6 +57,7 @@ type Query {
   item(where: ItemWhereUniqueInput!): Item
   itemsConnection(where: ItemWhereInput): ItemConnection!
   users(where: ItemWhereInput): [User]!
+  order(id: ID!): Order
   me: User
 }
 
