@@ -39,6 +39,25 @@ const Query = {
     //4. reurn the order
     return order;
   },
+  async orders(parent, args, ctx, info) {
+    //1. Check if the user is signed in
+    if (!ctx.request.userId) {
+      throw new Error("You must be logged in to see this");
+    }
+    const { userId } = ctx.request;
+    //2. Query all the users orders
+    const orders = await ctx.db.query.orders(
+      {
+        where: {
+          user: {
+            id: userId
+          }
+        }
+      },
+      info
+    );
+    return orders;
+  },
   me(parent, args, ctx, info) {
     //check if there is a current userId
     if (!ctx.request.userId) return null;

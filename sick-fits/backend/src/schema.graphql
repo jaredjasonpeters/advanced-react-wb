@@ -58,6 +58,7 @@ type Query {
   itemsConnection(where: ItemWhereInput): ItemConnection!
   users(where: ItemWhereInput): [User]!
   order(id: ID!): Order
+  orders(orderBy: OrderOrderByInput): [Order]!
   me: User
 }
 
